@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeaMC – Home</title>
+  <style>
+    :root {
+      --bg: #f9f9f9;
+      --nav-bg: #ffffff;
+      --card-bg: #ffffff;
+      --discord-bg: #f0f0f0;
+      --accent: #3cb371;
+      --accent-dark: #2e8b57;
+      --text-main: #222;
+      --text-muted: #666;
+      --shadow: rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      background: var(--nav-bg);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: var(--accent-dark);
+    }
+
+    .hero {
+      background: url('https://via.placeholder.com/1800x400/adebad/ffffff?text=Welcome+to+PeaMC') center/cover no-repeat;
+      height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .hero h1 {
+      position: relative;
+      font-size: 3rem;
+      color: var(--accent-dark);
+      z-index: 1;
+    }
+
+    .cards {
+      max-width: 1100px;
+      margin: 2rem auto;
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-body {
+      padding: 1.2rem;
+    }
+
+    .card-body h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent-dark);
+    }
+
+    .card-body p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .card-footer {
+      background: #f1f1f1;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--accent-dark);
+    }
+
+    .discord-section {
+      display: flex;
+      justify-content: center;
+      margin: 3rem auto;
+    }
+
+    .counter_vd-grey {
+      background-color: var(--discord-bg);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px var(--shadow);
+      border: 1px solid #ddd;
+    }
+
+    footer {
+      background: var(--nav-bg);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 3rem;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PeaMC</div>
+</header>
+
+<section class="hero">
+  <h1>WELCOME TO PeaMC</h1>
+</section>
+
+<section class="cards">
+  <div class="card">
+    <div class="card-body">
+      <h3>Survival SMP</h3>
+      <p>Explore Like It's Minecraft Alpha. PeaMC ditches the fluff: no /tp, no land claims, no plugins in your face. Survive, travel, and build just like the old days—pure Minecraft fun.</p>
+    </div>
+    <div class="card-footer">
+      <span id="player-count">Loading...</span>
+      <button class="btn" onclick="copyIP()">Copy IP</button>
+    </div>
+  </div>
+</section>
+
+<section class="discord-section">
+  <div id="discord-widget" class="counter_vd-grey">
+    <iframe src="https://discord.com/widget?id=1065482405663752232&amp;theme=light" width="300" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 PeaMC • <a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a>
+</footer>
+
+<script>
+function copyIP() {
+  navigator.clipboard.writeText("play.pea-mc.com");
+  alert("Server IP copied!");
+}
+
+async function updatePlayerCount() {
+  try {
+    const res = await fetch("https://api.mcsrvstat.us/2/play.pea-mc.com");
+    const data = await res.json();
+    if (data.online) {
+      document.getElementById("player-count").textContent =
+        `${data.players.online} / ${data.players.max} online`;
+    } else {
+      document.getElementById("player-count").textContent = "Server offline";
+    }
+  } catch (e) {
+    document.getElementById("player-count").textContent = "Error loading";
+    console.error("Error fetching player count:", e);
+  }
+}
+updatePlayerCount();
+</script>
+
+</body>
+</html>
